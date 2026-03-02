@@ -3,7 +3,7 @@
 import { Piece, SquareType } from '@/lib/types';
 import GamePiece from './game-piece';
 import { cn } from '@/lib/utils';
-
+import Image from 'next/image';
 interface GameSquareProps {
   x: number;
   y: number;
@@ -36,6 +36,21 @@ export default function GameSquare({
     return isLight ? 'bg-amber-200' : 'bg-amber-100';
   };
 
+  const getSecretBaseIndex = () => {
+  const row = y - 3; // 0 → 2
+  if (row < 0 || row > 2) return null;
+
+  // Xác định vùng trái
+  if (x === 1) return row + 1;
+  if (x === 2) return 6 - row;
+
+  // Xác định vùng phải
+  if (x === 4) return row + 1;
+  if (x === 5) return 6 - row;
+
+  return null;
+};
+
   const getSpecialSquareClass = () => {
     switch (squareType) {
       case SquareType.LAIR:
@@ -64,10 +79,20 @@ export default function GameSquare({
         <div className="absolute top-0 right-0 w-3 h-3 bg-purple-600 rounded-full" />
       )}
       {squareType === SquareType.TRAP && (
-        <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-red-600 to-red-900" />
+        <Image
+          src={`/NhaTu.jpg`}
+          alt={`/NhaTu.jpg`}
+          fill
+          className="object-cover"
+        />
       )}
       {squareType === SquareType.SECRET_BASE && (
-        <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-blue-400 to-blue-600" />
+        <Image
+          src={`/DiaDao${getSecretBaseIndex()}.png`}
+          alt={`/DiaDao${getSecretBaseIndex()}.png`}
+          fill
+          className="object-cover"
+        />
       )}
 
       {/* Piece on square */}
